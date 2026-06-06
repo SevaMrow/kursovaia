@@ -1,0 +1,103 @@
+{% extends 'orders/base.html' %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Отчёты</h1>
+</div>
+
+<!-- Фильтры -->
+<div class="card mb-4">
+    <div class="card-body">
+        <form method="get" class="row">
+            <div class="col-md-3">
+                <label class="form-label">Дата с</label>
+                <input type="date" name="date_from" class="form-control" value="{{ date_from }}">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Дата по</label>
+                <input type="date" name="date_to" class="form-control" value="{{ date_to }}">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Тип отчёта</label>
+                <select name="report_type" class="form-select">
+                    <option value="orders" {% if report_type == 'orders' %}selected{% endif %}>Заказы</option>
+                    <option value="equipment" {% if report_type == 'equipment' %}selected{% endif %}>Загрузка оборудования</option>
+                </select>
+            </div>
+            <div class="col-md-3 d-flex align-items-end">
+                <button type="submit" class="btn btn-primary me-2">Показать</button>
+                <a href="{% url 'export_excel' %}?{{ request.GET.urlencode }}" class="btn btn-success">Экспорт Excel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Отчёт по заказам -->
+{% if report_type == 'orders' %}
+<div class="card">
+    <div class="card-header">
+        <h5>Список заказов</h5>
+    </div>
+    <div class="card-body">
+        <table class="table table-bordered">
+            <thead class="table-dark">
+                <tr><th>№</th><th>Номер</th><th>Клиент</th><th>Продукция</th><th>Тираж</th><th>Статус</th><th>Стоимость</th></tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ order.order_number }}</td>
+                    <td>{{ order.client.name }}</td>
+                    <td>{{ order.product.name }}</td>
+                    <td>{{ order.quantity }}</td>
+                    <td>{{ order.status.name }}</td>
+                    <td>{{ order.total_cost }} руб.</td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="7" class="text-center">Нет заказов</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endif %}
+
+<!-- Отчёт по загрузке оборудования -->
+{% if report_type == 'equipment' %}
+<div class="card">
+    <div class="card-header">
+        <h5>Загрузка оборудования</h5>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            {% for eq in equipment_load %}
+            <div class="col-md-6 mb-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h5>{{ eq.name }}</h5>
+                        <p>Количество назначенных этапов: <strong>{{ eq.load_count }}</strong></p>
+                        <div class="progress">
+                            <div class="progress-bar {% if eq.load_count > 10 %}bg-danger{% elif eq.load_count > 5 %}bg-warning{% else %}bg-success{% endif %}" 
+                                 style="width: {% if eq.load_count > 20 %}100{% else %}{{ eq.load_count|floatformat:0|default:0 }}0{% endif %}%;">
+                                {{ eq.load_count }} заданий
+                            </div>
+                        </div>
+                        <p class="mt-2">
+                            Статус: {% if eq.is_available %}
+                            <span class="badge bg-success">Доступно</span>
+                            {% else %}
+                            <span class="badge bg-danger">В ремонте</span>
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <p class="text-center">Нет данных об оборудовании</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

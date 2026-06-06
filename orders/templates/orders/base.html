@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Полиграфическое производство - Красная Звезда</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .sidebar {
+            min-height: 100vh;
+            background-color: #343a40;
+        }
+        .sidebar .nav-link {
+            color: rgba(255,255,255,.75);
+        }
+        .sidebar .nav-link:hover {
+            color: rgba(255,255,255,1);
+        }
+        .sidebar .nav-link.active {
+            color: white;
+            background-color: #007bff;
+        }
+        .progress-bar-custom {
+            height: 20px;
+            border-radius: 10px;
+        }
+        .notification-badge {
+            position: relative;
+            top: -10px;
+            right: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <nav class="col-md-2 d-md-block sidebar p-0">
+                <div class="position-sticky">
+                    <div class="p-3 text-white text-center border-bottom">
+                        <h5>Красная Звезда</h5>
+                        <small>{{ user.username }}</small>
+                    </div>
+                    <ul class="nav flex-column mt-3">
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}" href="{% url 'dashboard' %}">
+                                <i class="fas fa-tachometer-alt me-2"></i> Дашборд
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if 'order' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'order_list' %}">
+                                <i class="fas fa-shopping-cart me-2"></i> Заказы
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if 'equipment' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'equipment_list' %}">
+                                <i class="fas fa-microchip me-2"></i> Оборудование
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if 'client' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'client_list' %}">
+                                <i class="fas fa-users me-2"></i> Клиенты
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if 'product' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'product_list' %}">
+                                <i class="fas fa-box me-2"></i> Продукция
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if 'report' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'report' %}">
+                                <i class="fas fa-chart-bar me-2"></i> Отчёты
+                            </a>
+                        </li>
+                        <li class="nav-item mt-5">
+                            <a class="nav-link text-danger" href="{% url 'logout' %}">
+                                <i class="fas fa-sign-out-alt me-2"></i> Выход
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <!-- Main content -->
+            <main class="col-md-10 ms-sm-auto px-md-4">
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} alert-dismissible fade show mt-3" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+                
+                {% block content %}
+                {% endblock %}
+            </main>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

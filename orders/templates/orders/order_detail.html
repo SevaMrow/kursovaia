@@ -1,0 +1,108 @@
+{% extends 'orders/base.html' %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Заказ {{ order.order_number }}</h1>
+    <div>
+        <a href="{% url 'order_edit' order.id %}" class="btn btn-warning">Редактировать</a>
+        <a href="{% url 'order_list' %}" class="btn btn-secondary">Назад</a>
+    </div>
+</div>
+
+<!-- Прогресс-бар жизненного цикла -->
+<div class="card mb-4">
+    <div class="card-header bg-info text-white">
+        <h5>Жизненный цикл заказа</h5>
+    </div>
+    <div class="card-body">
+        <div class="progress mb-3" style="height: 30px;">
+            <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" 
+                 role="progressbar" style="width: {{ progress }}%;" 
+                 aria-valuenow="{{ progress }}" aria-valuemin="0" aria-valuemax="100">
+                {{ progress }}% выполнено
+            </div>
+        </div>
+        <p class="text-muted">Прогресс выполнения: {{ progress }}%</p>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Информация о заказе -->
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5>Информация о заказе</h5>
+            </div>
+            <div class="card-body">
+                <table class="table">
+                    <tr><th>Номер:</th><td>{{ order.order_number }}</td></tr>
+                    <tr><th>Клиент:</th><td>{{ order.client.name }}</td></tr>
+                    <tr><th>Продукция:</th><td>{{ order.product.name }}</td></tr>
+                    <tr><th>Тираж:</th><td>{{ order.quantity }} шт.</td></tr>
+                    <tr><th>Формат:</th><td>{{ order.format|default:"-" }}</td></tr>
+                    <tr><th>Бумага:</th><td>{{ order.paper_type|default:"-" }}</td></tr>
+                    <tr><th>Статус:</th><td><span class="badge bg-primary">{{ order.status.name }}</span></td></tr>
+                    <tr><th>Срок сдачи:</th><td>{{ order.deadline_date }}</td></tr>
+                    <tr><th>Себестоимость:</th><td><strong>{{ order.total_cost }} руб.</strong></td></tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Этапы производства -->
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5>Этапы производства</h5>
+            </div>
+            <div class="card-body">
+                <!-- Форма добавления этапа -->
+                <form method="post" class="mb-3">
+                    {% csrf_token %}
+                    <input type="hidden" name="add_stage" value="1">
+                    <div class="row">
+                        <div class="col-md-5">{{ stage_form.stage_name }}</div>
+                        <div class="col-md-3">{{ stage_form.equipment }}</div>
+                        <div class="col-md-2">{{ stage_form.planned_start }}</div>
+                        <div class="col-md-2"><button type="submit" class="btn btn-sm btn-success">Добавить</button></div>
+                    </div>
+                </form>
+                
+                <table class="table table-sm">
+                    <thead class="table-light">
+                        <tr><th>Этап</th><th>Оборудование</th><th>План</th><th>Статус</th><th></th></tr>
+                    </thead>
+                    <tbody>
+                        {% for stage in stages %}
+                        <tr>
+                            <td>{{ stage.stage_name }}</td>
+                            <td>{{ stage.equipment.name }}</td>
+                            <td>{{ stage.planned_start|date:"d.m" }} - {{ stage.planned_end|date:"d.m" }}</td>
+                            <td>
+                                <span class="badge bg-{% if stage.stage_status == 'Выполнен' %}success{% elif stage.stage_status == 'В работе' %}warning{% else %}secondary{% endif %}">
+                                    {{ stage.stage_status }}
+                                </span>
+                            </td>
+                            <td>
+                                <form method="post" style="display:inline">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="update_stage" value="1">
+                                    <input type="hidden" name="stage_id" value="{{ stage.id }}">
+                                    <select name="stage_status" class="form-select form-select-sm" style="width: 120px;" onchange="this.form.submit()">
+                                        <option value="Запланирован" {% if stage.stage_status == 'Запланирован' %}selected{% endif %}>Запланирован</option>
+                                        <option value="В работе" {% if stage.stage_status == 'В работе' %}selected{% endif %}>В работе</option>
+                                        <option value="Выполнен" {% if stage.stage_status == 'Выполнен' %}selected{% endif %}>Выполнен</option>
+                                    </select>
+                                </form>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="5" class="text-center">Нет этапов</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

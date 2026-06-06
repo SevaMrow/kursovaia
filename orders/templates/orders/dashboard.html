@@ -1,0 +1,98 @@
+{% extends 'orders/base.html' %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Дашборд</h1>
+</div>
+
+<!-- Статистика -->
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card text-white bg-primary">
+            <div class="card-body">
+                <h5 class="card-title">Всего заказов</h5>
+                <h2>{{ total_orders }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-warning">
+            <div class="card-body">
+                <h5 class="card-title">В работе</h5>
+                <h2>{{ active_orders }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-success">
+            <div class="card-body">
+                <h5 class="card-title">Выполнено</h5>
+                <h2>{{ completed_orders }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-danger">
+            <div class="card-body">
+                <h5 class="card-title">Просрочено</h5>
+                <h2>{{ overdue_orders }}</h2>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Последние заказы -->
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5>Последние заказы</h5>
+            </div>
+            <div class="card-body">
+                <table class="table table-striped">
+                    <thead>
+                        <tr><th>Номер</th><th>Клиент</th><th>Тираж</th><th>Статус</th><th>Срок</th><th></th></tr>
+                    </thead>
+                    <tbody>
+                        {% for order in recent_orders %}
+                        <tr>
+                            <td>{{ order.order_number }}</td>
+                            <td>{{ order.client.name }}</td>
+                            <td>{{ order.quantity }}</td>
+                            <td>
+                                <span class="badge bg-{% if order.status.name == 'Выполнен' %}success{% elif order.status.name == 'В работе' %}warning{% else %}secondary{% endif %}">
+                                    {{ order.status.name }}
+                                </span>
+                            </td>
+                            <td>{{ order.deadline_date }}</td>
+                            <td><a href="{% url 'order_detail' order.id %}" class="btn btn-sm btn-info">Детали</a></td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="6" class="text-center">Нет заказов</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Уведомления -->
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header bg-warning">
+                <h5><i class="fas fa-bell"></i> Уведомления</h5>
+            </div>
+            <div class="card-body" style="max-height: 300px; overflow-y: auto;">
+                {% for notification in notifications %}
+                <div class="alert alert-sm alert-info">
+                    <small>{{ notification.created_at|date:"d.m.Y H:i" }}</small>
+                    <p class="mb-0">{{ notification.message }}</p>
+                </div>
+                {% empty %}
+                <p class="text-muted text-center">Нет новых уведомлений</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

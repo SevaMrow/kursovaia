@@ -1,0 +1,237 @@
+/* Основные стили для полиграфического производства */
+
+/* Общие стили */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8f9fc;
+}
+
+/* Стили для карточек статистики */
+.stat-card {
+    transition: transform 0.2s;
+    border: none;
+    border-radius: 15px;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+}
+
+.stat-card .card-body {
+    padding: 1.5rem;
+}
+
+.stat-card h2 {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 0;
+}
+
+.stat-card p {
+    margin-bottom: 0;
+    opacity: 0.8;
+}
+
+/* Цвета для статусов */
+.status-new { background-color: #6c757d; color: white; }
+.status-pending { background-color: #ffc107; color: #212529; }
+.status-working { background-color: #0dcaf0; color: #212529; }
+.status-completed { background-color: #198754; color: white; }
+.status-cancelled { background-color: #dc3545; color: white; }
+
+/* Стили для таблиц */
+.table-custom {
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.table-custom thead {
+    background-color: #2c3e50;
+    color: white;
+}
+
+/* Стили для бокового меню */
+.sidebar-custom {
+    background: linear-gradient(180deg, #2c3e50 0%, #1a252f 100%);
+    min-height: 100vh;
+}
+
+.sidebar-custom .nav-link {
+    color: rgba(255,255,255,0.8);
+    padding: 0.75rem 1.5rem;
+    transition: all 0.3s;
+}
+
+.sidebar-custom .nav-link:hover {
+    background-color: rgba(255,255,255,0.1);
+    color: white;
+}
+
+.sidebar-custom .nav-link.active {
+    background-color: #3498db;
+    color: white;
+}
+
+.sidebar-custom .nav-link i {
+    margin-right: 10px;
+    width: 20px;
+    text-align: center;
+}
+
+/* Стили для дашборда */
+.dashboard-card {
+    border-radius: 15px;
+    border: none;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+}
+
+/* Прогресс-бар для жизненного цикла */
+.lifecycle-progress {
+    height: 30px;
+    border-radius: 20px;
+    background-color: #e9ecef;
+}
+
+.lifecycle-progress .progress-bar {
+    border-radius: 20px;
+    font-weight: bold;
+    line-height: 30px;
+}
+
+/* Анимация для уведомлений */
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.notification-item {
+    animation: slideIn 0.3s ease-out;
+}
+
+/* Стили для форм */
+.form-custom {
+    background: white;
+    padding: 2rem;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+}
+
+.form-custom .form-label {
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+.form-custom .form-control,
+.form-custom .form-select {
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    padding: 0.6rem 1rem;
+}
+
+.form-custom .form-control:focus,
+.form-custom .form-select:focus {
+    border-color: #3498db;
+    box-shadow: 0 0 0 0.2rem rgba(52,152,219,0.25);
+}
+
+/* Кнопки */
+.btn-custom-primary {
+    background-color: #3498db;
+    border-color: #3498db;
+    border-radius: 8px;
+    padding: 0.5rem 1.5rem;
+}
+
+.btn-custom-primary:hover {
+    background-color: #2980b9;
+}
+
+/* Карточка заказа */
+.order-card {
+    border-left: 4px solid;
+    margin-bottom: 1rem;
+    transition: all 0.2s;
+}
+
+.order-card:hover {
+    transform: translateX(5px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.order-card.urgent {
+    border-left-color: #e74c3c;
+    background-color: #fff5f5;
+}
+
+/* Медиа-запросы для адаптивности */
+@media (max-width: 768px) {
+    .sidebar-custom {
+        min-height: auto;
+    }
+    
+    .stat-card h2 {
+        font-size: 1.8rem;
+    }
+    
+    .table-custom {
+        font-size: 0.85rem;
+    }
+}
+
+/* Стили для отчётов */
+.report-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 2rem;
+    border-radius: 15px;
+    margin-bottom: 2rem;
+}
+
+/* Индикатор загрузки */
+.loading-spinner {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(0,0,0,0.1);
+    border-radius: 50%;
+    border-top-color: #3498db;
+    animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Badge для уведомлений */
+.badge-notification {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background-color: #e74c3c;
+    color: white;
+    border-radius: 50%;
+    padding: 0.2rem 0.5rem;
+    font-size: 0.7rem;
+    font-weight: bold;
+}
+
+/* Стили для диаграммы загрузки оборудования */
+.load-bar {
+    background: linear-gradient(90deg, #3498db, #2ecc71);
+    border-radius: 10px;
+    transition: width 0.5s ease;
+}
+
+.load-bar-text {
+    position: absolute;
+    right: 10px;
+    color: white;
+    font-weight: bold;
+}

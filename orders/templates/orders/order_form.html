@@ -1,0 +1,47 @@
+{% extends 'orders/base.html' %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">{{ title }}</h1>
+    <a href="{% url 'order_list' %}" class="btn btn-secondary">← Назад</a>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <form method="post">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Клиент</label>
+                    {{ form.client }}
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Продукция</label>
+                    {{ form.product }}
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label class="form-label">Тираж</label>
+                    {{ form.quantity }}
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label class="form-label">Формат</label>
+                    {{ form.format }}
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label class="form-label">Тип бумаги</label>
+                    {{ form.paper_type }}
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label class="form-label">Срок сдачи</label>
+                    {{ form.deadline_date }}
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Статус</label>
+                    {{ form.status }}
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Сохранить</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
